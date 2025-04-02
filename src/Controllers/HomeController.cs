@@ -1,11 +1,11 @@
-using System;
 using System.Data;
-using System.Data.Common;
 using System.Diagnostics;
-using System.Reflection;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using System.Text;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Data.SqlClient;
+using Microsoft.Identity.Client;
+using Microsoft.IdentityModel.Tokens;
 using phantom.Core.Crypto;
 using phantom.Core.WZMD5MOD;
 using phantom.MVC.MuOnline.Models;
@@ -15,7 +15,6 @@ namespace phantom.MVC.MuOnline.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private readonly string _connectionString = "Data Source=192.168.2.199;Initial Catalog=MuOnline;User ID=sa;Password=;TrustServerCertificate=True;";
 
         public HomeController(ILogger<HomeController> logger)
         {
@@ -55,38 +54,27 @@ namespace phantom.MVC.MuOnline.Controllers
                 {
                     guid += (new Random()).Next(0, 9);
                 }
-                using (DbCommand dbCommand = new SqlCommand($"SELECT memb___id,mail_addr FROM [MEMB_INFO] WHERE memb___id='{model.Name}' OR mail_addr='{model.Email}'"))
-                using (DbConnection dbConnection = new SqlConnection(_connectionString))
+                using (var dbConnection = new SqlDbConnection())
                 {
-                    dbCommand.CommandType = System.Data.CommandType.Text;
-                    dbCommand.Connection = dbConnection;
-                    DbDataAdapter dbDataAdapter = new SqlDataAdapter((SqlCommand)dbCommand);
-                    DataTable dataTable = new DataTable();
-                    dbDataAdapter.Fill(dataTable);
+                    var dataTable = dbConnection.Fill($"SELECT memb___id,mail_addr FROM [MEMB_INFO] WHERE memb___id='{model.Name}' OR mail_addr='{model.Email}'");
                     if (dataTable.Rows.Count > 0)
                     {
                         return new APIModel("Đã tồn tại tài khoản.");
                     }
-                    await dbConnection.OpenAsync();
-                    using (DbTransaction dbTransaction = dbConnection.BeginTransaction())
+                    dbConnection.OpenTransaction();
+                    var retQueries = await dbConnection.ExecuteNonQueryAsync($"INSERT INTO [MEMB_INFO] (memb___id,mail_addr,memb_name,sno__numb,bloc_code,ctl1_code) VALUES ('{model.Name}','{model.Email}','phantom','{guid}',0,1)");
+                    if (retQueries <= 0)
                     {
-                        dbCommand.Transaction = dbTransaction;
-                        dbCommand.CommandText = $"INSERT INTO [MEMB_INFO] (memb___id,mail_addr,memb_name,sno__numb,bloc_code,ctl1_code) VALUES ('{model.Name}','{model.Email}','phantom','{guid}',0,1)";
-                        var retQueries = await dbCommand.ExecuteNonQueryAsync();
-                        if (retQueries <= 0)
-                        {
-                            await dbTransaction.RollbackAsync();
-                            return new APIModel("Không thể tạo được thông tin tài khoản.");
-                        }
-                        dbCommand.CommandText = $"exec SP_MD5_ENCODE_VALUE @btInStr='{model.Password}',@btInStrIndex='{model.Name}'";
-                        retQueries = await dbCommand.ExecuteNonQueryAsync();
-                        if (retQueries <= 0)
-                        {
-                            await dbTransaction.RollbackAsync();
-                            return new APIModel("Không thể tạo được thông tin tài khoản.");
-                        }
-                        await dbTransaction.CommitAsync();
+                        dbConnection.RollbackTransaction();
+                        return new APIModel("Không thể tạo được thông tin tài khoản.");
                     }
+                    retQueries = await dbConnection.ExecuteNonQueryAsync($"EXEC SP_MD5_ENCODE_VALUE @btInStr='{model.Password}',@btInStrIndex='{model.Name}'");
+                    if (retQueries <= 0)
+                    {
+                        dbConnection.RollbackTransaction();
+                        return new APIModel("Không thể tạo được thông tin tài khoản.");
+                    }
+                    dbConnection.CommitTransaction();
                 }
                 return new APIModel();
             }
@@ -105,14 +93,30 @@ namespace phantom.MVC.MuOnline.Controllers
             md5Hash.SetMagicNum(dwAccKey);
             md5Hash.Update(Encoding.UTF8.GetBytes(input), input.Length);
 
-            // Attempt to get the hash before finalization (will throw an exception)
-            //byte[] prematureDigest = md5Hash.GetDigest();
-
             byte[] digest = md5Hash.FinalizeMD5();
             byte[] finalDigest = md5Hash.GetDigest();
             string finalString = Convert.ToBase64String(finalDigest);
-            
+
             return finalString;
+        }
+
+        private string CreateLoginToken(string accountId)
+        {
+            //Authentication successful so generate jwt token
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(new Claim[]
+                {
+                    new Claim(ClaimTypes.NameIdentifier, $"{accountId}"),
+                    new Claim(ClaimTypes.Name, $"{accountId}"),
+                }),
+                Expires = DateTime.UtcNow.AddMinutes(Globals.TokenTimeout),
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(Globals.JwtSecretKey), SecurityAlgorithms.HmacSha256Signature)
+            };
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+            var stringToken = tokenHandler.WriteToken(token);
+            return stringToken;
         }
 
         [HttpPost]
@@ -125,16 +129,13 @@ namespace phantom.MVC.MuOnline.Controllers
                     return new APIModel("Tên tài khoản hoặc mật khẩu không được để trống.");
                 }
                 model.Password = CryptoHelper.DecryptString(model.Password!);
-                using (DbCommand dbCommand = new SqlCommand($"SET ARITHABORT ON; SELECT TOP 1 CAST('' AS XML).value('xs:base64Binary(sql:column(\"memb__pwd\"))', 'varchar(max)') AS memb__pwd FROM [MEMB_INFO] WHERE memb___id='{model.Name}'"))
-                using (DbConnection dbConnection = new SqlConnection(_connectionString))
+                using (var dbConnection = new SqlDbConnection())
                 {
-                    dbCommand.CommandType = System.Data.CommandType.Text;
-                    dbCommand.Connection = dbConnection;
-                    await dbConnection.OpenAsync();
-                    var memb__pwd = $"{await dbCommand.ExecuteScalarAsync()}";
+                    var memb__pwd = $"{await dbConnection.ExecuteScalarAsync($"SET ARITHABORT ON; SELECT TOP 1 CAST('' AS XML).value('xs:base64Binary(sql:column(\"memb__pwd\"))', 'varchar(max)') AS memb__pwd FROM [MEMB_INFO] WHERE memb___id='{model.Name}'")}";
                     if (Base64Encode(model.Password!, model.Name!) == memb__pwd)
                     {
-                        return new APIModel();
+                        var stringToken = CreateLoginToken(model.Name!);
+                        return new APIModel(new { Token = stringToken });
                     }
                 }
                 return new APIModel("Sai thông tin tài khoản.");
@@ -163,8 +164,10 @@ namespace phantom.MVC.MuOnline.Controllers
     {
         public short RetCode { get; set; }
         public string? Message { get; set; }
+        public object? Data { get; set; }
 
         public APIModel() { }
+        public APIModel(object? data) => Data = data;
         public APIModel(string message)
         {
             Message = message;

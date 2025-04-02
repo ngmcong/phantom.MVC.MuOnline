@@ -2,6 +2,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+phantom.MVC.MuOnline.ConfigJwtBearerService.ConfigServiceJwtBearer(builder.Services, phantom.MVC.MuOnline.Globals.JwtSecretKey);
 
 var app = builder.Build();
 
