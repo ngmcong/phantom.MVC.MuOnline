@@ -288,7 +288,7 @@
 							<input name="password" type="password" id="password_input" class="form_input" placeholder="Mật khẩu">
 						</div>
 						<div class="form_btn fl">
-							<input type="submit" value="login" id="logingBtn" class="ir btn_login">
+							<input type="button" onclick="loginClicked()" id="logingBtn" class="ir btn_login">
 						</div>
 
 						<div class="form_int fl clearfix">
@@ -306,8 +306,9 @@
 						<div class="form_signup"><a class="btn_signup ir" href="@Url.Action("Register", "Home")"></a></div>
 						@* <a class="btn_signup ir" href=""></a> *@
 					</form>
-				</div><a class="btn_signup ir" href="">
-				</a><div class="logined login_later" id="logined" style="display: none">
+				</div>
+				<a class="btn_signup ir" href=""></a>
+				<div class="logined login_later" id="logined" style="display: none">
 					<a class="btn_signup ir" href="">
 					</a><form action="" class="form_login clearfix">
 						<a class="btn_signup ir" href="">
@@ -452,3 +453,43 @@
 		</td>
 	</tr>
 </table>
+<script type="text/javascript">
+	function loginClicked() {
+		$('#dialog').show();
+		var retData;
+		var password = $('#password_input').val();
+		var encrypted = encryptString(password, key, iv);
+		$.ajax({
+			type: 'POST',
+			dataType:"json",
+			data: JSON.stringify({
+				"Name": $('#login_input').val(),
+				"Password": encrypted
+			}),
+			url: '@Url.Action("Login", "Home")',
+			headers:{
+				'Authorization' : 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcHBWZXIiOiIwLjAuMCIsImV4cCI6NDcyNjM4OTEyMiwibG9jYWxlIjoiIiwibWFzdGVyVmVyIjoiIiwicGxhdGZvcm0iOiIiLCJwbGF0Zm9ybVZlciI6IiIsInVzZXJJZCI6IiJ9.QIZbmB5_9Xlap_gDhjETfMI6EAmR15yBtIQkWFWJkrg',
+				'Content-Type':'application/json'
+			},
+			success: function(data) {
+				retData = data;
+			},
+			error: function(data) {
+				console.log(data);
+			},
+			complete: function(data) {
+				console.log(data);
+				$('#dialog').hide();
+				if (retData && retData.retCode == 0) {
+					var url = '@Url.Action("Index", "Home")';
+					window.location.href = url;
+					return;
+				}
+				if (retData) {
+					setDialogText(retData.message);
+					myModal.show();
+				}
+			}
+		});
+	}
+</script>

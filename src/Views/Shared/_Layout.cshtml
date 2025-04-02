@@ -44,6 +44,26 @@
             </main>
         </div>
     </div>
+    <div id="dialog" class="dialog full" style="display: none;">
+        <img src="/images/loading1.gif" />
+    </div>
+    <div id="myModal" class="modal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">THÔNG BÁO</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Vui lòng xác nhận đồng ý các điều khoản & quy định!</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    @* <button type="button" class="btn btn-primary">Save changes</button> *@
+                </div>
+            </div>
+        </div>
+    </div>
 
     <footer class="border-top footer text-muted">
         <div class="container">
@@ -53,6 +73,57 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/crypto-js.min.js"></script>
+    <script type="text/javascript">
+        const key = "YourSecretKey123"; // 16 bytes for AES-128
+        const iv = "InitVector123450"; // 16 bytes
+        function encryptString(plainText, key, iv) {
+              try {
+                const keyBytes = CryptoJS.enc.Utf8.parse(key);
+                const ivBytes = CryptoJS.enc.Utf8.parse(iv);
+
+                const encrypted = CryptoJS.AES.encrypt(plainText, keyBytes, {
+                    iv: ivBytes,
+                    mode: CryptoJS.mode.CBC,
+                    padding: CryptoJS.pad.Pkcs7,
+                });
+
+                const encryptedBytes = CryptoJS.enc.Base64.parse(encrypted.toString());
+                const ivBytesBase64 = CryptoJS.enc.Base64.parse(CryptoJS.enc.Utf8.parse(iv).toString(CryptoJS.enc.Base64));
+
+                const combinedBytes = new Uint8Array(ivBytesBase64.words.length * 4 + encryptedBytes.words.length * 4);
+                let offset = 0;
+                for (let i = 0; i < ivBytesBase64.words.length; i++) {
+                    const word = ivBytesBase64.words[i];
+                    combinedBytes[offset++] = (word >> 24) & 0xff;
+                    combinedBytes[offset++] = (word >> 16) & 0xff;
+                    combinedBytes[offset++] = (word >> 8) & 0xff;
+                    combinedBytes[offset++] = word & 0xff;
+                }
+                for (let i = 0; i < encryptedBytes.words.length; i++) {
+                    const word = encryptedBytes.words[i];
+                    combinedBytes[offset++] = (word >> 24) & 0xff;
+                    combinedBytes[offset++] = (word >> 16) & 0xff;
+                    combinedBytes[offset++] = (word >> 8) & 0xff;
+                    combinedBytes[offset++] = word & 0xff;
+                }
+
+                return CryptoJS.enc.Base64.stringify(CryptoJS.lib.WordArray.create(combinedBytes));
+            } catch (error) {
+                console.error("Encryption error:", error);
+                return null;
+            }
+        }
+        function setDialogText(text) {
+            $('#myModal .modal-body p').text(text);
+        }
+        var myModal;
+        $(document).ready(function() {
+            myModal = new bootstrap.Modal(document.getElementById('myModal'), {
+                keyboard: false
+            });
+        });
+    </script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

@@ -3,8 +3,11 @@ using System.Data;
 using System.Data.Common;
 using System.Diagnostics;
 using System.Reflection;
+using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
+using phantom.Core.Crypto;
+using phantom.Core.WZMD5MOD;
 using phantom.MVC.MuOnline.Models;
 
 namespace phantom.MVC.MuOnline.Controllers
@@ -46,6 +49,7 @@ namespace phantom.MVC.MuOnline.Controllers
         {
             try
             {
+                model.Password = CryptoHelper.DecryptString(model.Password!);
                 string guid = string.Empty;
                 for (int i = 0; i < 18; i++)
                 {
@@ -85,6 +89,55 @@ namespace phantom.MVC.MuOnline.Controllers
                     }
                 }
                 return new APIModel();
+            }
+            catch (Exception ex)
+            {
+                return new APIModel(ex.Message);
+            }
+        }
+
+        private string Base64Encode(string input, string accountName)
+        {
+            MUMD5 md5Hash = new MUMD5();
+
+            int dwAccKey = md5Hash.MakeAccountKey(accountName);
+
+            md5Hash.SetMagicNum(dwAccKey);
+            md5Hash.Update(Encoding.UTF8.GetBytes(input), input.Length);
+
+            // Attempt to get the hash before finalization (will throw an exception)
+            //byte[] prematureDigest = md5Hash.GetDigest();
+
+            byte[] digest = md5Hash.FinalizeMD5();
+            byte[] finalDigest = md5Hash.GetDigest();
+            string finalString = Convert.ToBase64String(finalDigest);
+            
+            return finalString;
+        }
+
+        [HttpPost]
+        public async Task<APIModel> Login([FromBody] RegisterModel model)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(model.Name) || string.IsNullOrEmpty(model.Password))
+                {
+                    return new APIModel("Tên tài khoản hoặc mật khẩu không được để trống.");
+                }
+                model.Password = CryptoHelper.DecryptString(model.Password!);
+                using (DbCommand dbCommand = new SqlCommand($"SET ARITHABORT ON; SELECT TOP 1 CAST('' AS XML).value('xs:base64Binary(sql:column(\"memb__pwd\"))', 'varchar(max)') AS memb__pwd FROM [MEMB_INFO] WHERE memb___id='{model.Name}'"))
+                using (DbConnection dbConnection = new SqlConnection(_connectionString))
+                {
+                    dbCommand.CommandType = System.Data.CommandType.Text;
+                    dbCommand.Connection = dbConnection;
+                    await dbConnection.OpenAsync();
+                    var memb__pwd = $"{await dbCommand.ExecuteScalarAsync()}";
+                    if (Base64Encode(model.Password!, model.Name!) == memb__pwd)
+                    {
+                        return new APIModel();
+                    }
+                }
+                return new APIModel("Sai thông tin tài khoản.");
             }
             catch (Exception ex)
             {

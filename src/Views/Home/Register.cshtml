@@ -124,37 +124,9 @@
 	</tr>
 </table>
 
-<div id="dialog" class="dialog full" style="display: none;">
-	<img src="/images/loading1.gif" />
-</div>
-
-<div id="myModal" class="modal" tabindex="-1">
-	<div class="modal-dialog modal-dialog-centered">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h5 class="modal-title">THÔNG BÁO</h5>
-				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-			</div>
-			<div class="modal-body">
-				<p>Vui lòng xác nhận đồng ý các điều khoản & quy định!</p>
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-				@* <button type="button" class="btn btn-primary">Save changes</button> *@
-			</div>
-		</div>
-	</div>
-</div>
-
 @section Scripts {
 	<script type="text/javascript">
-		function setDialogText(text) {
-			$('#myModal .modal-body p').text(text);
-		}
 		$(document).ready(function() {
-			var myModal = new bootstrap.Modal(document.getElementById('myModal'), {
-				keyboard: false
-			});
 			$("button[type=submit]").click(function() {
 				if ($('input:checkbox[name=confirmed]').is(':checked') == false) {
 					setDialogText('Vui lòng xác nhận đồng ý các điều khoản & quy định!');
@@ -163,13 +135,15 @@
 				}
 				$('#dialog').show();
 				var retData;
+				var password = $('#password').val();
+				var encrypted = encryptString(password, key, iv);
 				$.ajax({
 					type: 'POST',
 					dataType:"json",
 					data: JSON.stringify({
 						"Name": $('#name').val(),
 						"Email": $('#email').val(),
-						"Password": $('#password').val()
+						"Password": encrypted
 					}),
 					url: '@Url.Action("Register", "Home")',
 					headers:{

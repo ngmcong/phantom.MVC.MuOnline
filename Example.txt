@@ -1,1 +1,21 @@
 https://ht.dammemu.com/
+
+function decryptString(cipherText, key, iv) {
+    try {
+        const keyBytes = CryptoJS.enc.Utf8.parse(key);
+        const combinedBytes = CryptoJS.enc.Base64.parse(cipherText);
+        const ivBytes = CryptoJS.lib.WordArray.create(combinedBytes.words.slice(0, 4));
+        const encryptedBytes = CryptoJS.lib.WordArray.create(combinedBytes.words.slice(4));
+
+        const decrypted = CryptoJS.AES.decrypt({ ciphertext: encryptedBytes }, keyBytes, {
+            iv: ivBytes,
+            mode: CryptoJS.mode.CBC,
+            padding: CryptoJS.pad.Pkcs7,
+        });
+
+        return decrypted.toString(CryptoJS.enc.Utf8);
+    } catch (error) {
+        console.error("Decryption error:", error);
+        return null;
+    }
+}
