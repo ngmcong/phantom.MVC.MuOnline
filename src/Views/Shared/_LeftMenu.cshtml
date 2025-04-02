@@ -1,0 +1,454 @@
+﻿
+
+<style type="text/css">
+	/* Login */
+	.fl {
+		float: left;
+		display: inline;
+	}
+
+	.loginBox {
+		color: #62554c;
+		height: 290px;
+		z-index: 20;
+		background: url(../images/logoBg.jpg) repeat-y;
+		width: 262px;
+		border: 1px solid #292d32;
+		border-top: none;
+		margin-top: -3px;
+		float: left;
+		position: relative;
+	}
+
+		.loginBox .form_login {
+			color: #7d8ca0;
+		}
+
+	.logined .form_login {
+		color: #7d8ca0;
+		max-height: 160px;
+		overflow-y: scroll;
+		padding-bottom: 10px;
+		margin-top: 10px;
+	}
+
+	.loginBox .form_int {
+		width: 140px;
+		padding: 19px 0 0 14px;
+	}
+
+	.loginBox .form_input {
+		display: inline-block;
+		float: left;
+		width: 126px;
+		height: 30px;
+		color: #454e5b;
+		border: none;
+		padding-left: 25px;
+		margin-top: 5px;
+		line-height: 30px;
+	}
+
+		.loginBox .form_input:nth-child(1) {
+			background: url(../images/Account.jpg) no-repeat;
+		}
+
+		.loginBox .form_input:nth-child(2) {
+			background: url(../images/Password.jpg) no-repeat;
+		}
+
+	.loginBox .form_btn {
+		padding: 24px 0 0 5px;
+	}
+
+	.loginBox .btn_login {
+		width: 100px;
+		height: 67px;
+		background: url(../images/iconMap.png) no-repeat -230px -294px;
+		border: none;
+		cursor: pointer;
+		text-indent: -9999em;
+		display: block;
+	}
+
+		.loginBox .btn_login:hover {
+			background-position: -362px -294px;
+		}
+
+	.loginBox .form_line {
+		padding: 13px 14px 11px 15px;
+		clear: both;
+		font-size: 12px;
+		color: #9aa8a6;
+		font-family: "微软雅黑";
+		text-align: right;
+	}
+
+		.loginBox .form_line input {
+			vertical-align: middle;
+			line-height: 20px;
+			height: 20px;
+			margin-right: 7px;
+			float: left;
+		}
+
+		.loginBox .form_line label {
+			float: left;
+		}
+
+	.loginBox .forgot_pw {
+		color: #9aa8a6;
+	}
+
+	.loginBox .form_signup {
+	}
+
+		.loginBox .form_signup .btn_signup {
+			display: block;
+			margin: 0 auto;
+			width: 232px;
+			height: 53px;
+			background: url(../images/iconMap.png) no-repeat -230px -389px;
+			border: none;
+			cursor: pointer;
+			text-indent: -9999em;
+		}
+
+			.loginBox .form_signup .btn_signup:hover {
+				background-position: -230px -460px;
+			}
+
+	.loginBox .quick_login {
+		padding: 15px 15px 0 14px;
+		font-size: 12px;
+		color: #fff;
+		font-family: "微软雅黑";
+	}
+
+		.loginBox .quick_login a {
+			display: inline-block;
+			width: 20px;
+			height: 20px;
+			background: url(../images/iconMap.png) no-repeat;
+			vertical-align: middle;
+			margin-left: 10px;
+			text-indent: -9999em;
+		}
+
+			.loginBox .quick_login a.icon_facebook {
+				background-position: -360px -223px;
+			}
+
+				.loginBox .quick_login a.icon_facebook:hover {
+					background-position: -360px -253px;
+				}
+
+			.loginBox .quick_login a.icon_google {
+				background-position: -385px -223px;
+			}
+
+				.loginBox .quick_login a.icon_google:hover {
+					background-position: -385px -253px;
+				}
+
+			.loginBox .quick_login a.icon_twitter {
+				background-position: -416px -223px;
+			}
+
+				.loginBox .quick_login a.icon_twitter:hover {
+					background-position: -416px -253px;
+				}
+
+			.loginBox .quick_login a.icon_yahoo {
+				background-position: -447px -223px;
+			}
+
+				.loginBox .quick_login a.icon_yahoo:hover {
+					background-position: -447px -253px;
+				}
+
+			.loginBox .quick_login a.icon_windows {
+				background-position: -475px -223px;
+			}
+
+				.loginBox .quick_login a.icon_windows:hover {
+					background-position: -475px -253px;
+				}
+	/* Login */
+
+	#left-nav {
+		width: 260px;
+		float: left;
+		margin-bottom: 10px
+	}
+
+		#left-nav .fa-chevron-down::before {
+			background: 0;
+			content: "\25bc";
+			float: right;
+			font: 14px/10px a;
+			margin: 20px
+		}
+
+		#left-nav ul {
+			list-style: none;
+			margin: 0;
+			padding: 0;
+		}
+
+			#left-nav ul a {
+				cursor: pointer
+			}
+
+			#left-nav ul > li {
+				float: left
+			}
+
+				#left-nav ul > li a {
+					display: block;
+					background-position: 0 -1862px;
+					height: 50px;
+					width: 262px;
+					color: #c3c8cf;
+					font: 16px/50px Livvic;
+					text-indent: 25px;
+					background-image: url(../images/layout-sea3fcdcac9.png);
+					background-repeat: no-repeat;
+				}
+
+					#left-nav ul > li a:hover,
+					#left-nav ul > li a.active,
+					#left-nav ul > li a.open {
+						background-position: 0 -1812px;
+						height: 50px;
+						width: 262px;
+						color: #7dbcff
+					}
+
+				#left-nav ul > li ul {
+					display: none;
+					float: left
+				}
+
+					#left-nav ul > li ul li {
+						background: #212329
+					}
+
+						#left-nav ul > li ul li a {
+							background: url(../images/left-nav-sub-nor.png) no-repeat 13px 17px;
+							font: 15px/40px Tahoma;
+							height: 40px;
+							color: #267698;
+							display: block;
+							text-indent: 25px
+						}
+
+							#left-nav ul > li ul li a.active,
+							#left-nav ul > li ul li a:hover {
+								background: url(../images/left-nav-sub-hov.png) no-repeat 13px 17px;
+								color: #eb8e02;
+								height: 40px
+							}
+
+	}
+
+	#left-nav ul > li ul li:nth-child(even) {
+		background: #26282e
+	}
+
+	#left-nav ul > li.active,
+	#left-nav ul > li.has-sub {
+		background-position: 0 -40px
+	}
+
+	#left-nav ul > li.open span.holder {
+		position: absolute;
+		display: block;
+		top: 15px;
+		right: 10px
+	}
+
+	#left-nav ul > li.active ul,
+	#left-nav ul > li.open ul {
+		display: block !important
+	}
+</style>
+
+<table>
+	<tr>
+		<td><div><a class="taigame" href="">Play Game</a></div></td>
+	</tr>
+	<tr>
+		<td>
+			<div class="loginBox grid_box">
+				<div class="loging" id="loging">
+					<form class="form_login" id="login_form" method="post" action="" style="width: 250px;">
+						<div class="form_int fl clearfix">
+							<input type="text" autocomplete="off" name="username" id="login_input" placeholder="Tài khoản" class="form_input">
+							<input name="password" type="password" id="password_input" class="form_input" placeholder="Mật khẩu">
+						</div>
+						<div class="form_btn fl">
+							<input type="submit" value="login" id="logingBtn" class="ir btn_login">
+						</div>
+
+						<div class="form_int fl clearfix">
+							<input type="text" name="captcha" id="captcha_input" maxlength="20" class="form_input" placeholder="Captcha" value="">
+						</div>
+						<div class="form_btn fl">
+							<img src="https://ht.dammemu.com/ajax/captcha/100/30/70/4/15/captcha_text/25" alt="CAPTCHA" id="captcha_image">
+						</div>
+
+
+						<div class="form_line">
+							<input type="checkbox" id="memory" name="memory" value="0"><label for="check_login">Lưu thông tin</label>
+							<a href="/lost-password" class="forgot_pw">Quên mật khẩu?</a>
+						</div>
+						<div class="form_signup"><a class="btn_signup ir" href="@Url.Action("Register", "Home")"></a></div>
+						@* <a class="btn_signup ir" href=""></a> *@
+					</form>
+				</div><a class="btn_signup ir" href="">
+				</a><div class="logined login_later" id="logined" style="display: none">
+					<a class="btn_signup ir" href="">
+					</a><form action="" class="form_login clearfix">
+						<a class="btn_signup ir" href="">
+						</a><p class="userInfo"><a class="btn_signup ir" href="">Hello! <span class="userName">kevinloh </span> </a><a href="" class="logout">Log Out</a></p>
+						<div class="visitedInfo myServer" id="last_login">
+						</div>
+						<div class="visitedInfo" id="last_server">
+						</div>
+						<p class="operation">
+							<a href="#" class="link_account ir">Account</a>
+							<a href="#" class="link_recharge ir">Recharge</a>
+						</p>
+					</form>
+				</div>
+			</div>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			<div id="left-nav">
+				<ul>
+					<li data-id="1" data-active-path="" class="has-sub">
+						<a data-active-path="" target="_self" title="Quản lý tài khoản">Tài Khoản<i class="fa fa-chevron-down"></i><span class="holder" style="border-color: rgba(255, 255, 255, 0.35);"></span></a>
+						<ul style="">
+							<li><a href="" target="_self" data-id="1" title="Gift Code">Gift Code</a></li>
+							<li><a href="" target="_self" data-id="1" title="Thông tin tài khoản">Quản lý nhân vật</a></li>
+							<li><a href="" target="_self" data-id="1" title="Thay đổi thông tin">Đổi thông tin</a></li>
+							<li><a href="" target="_self" data-id="1" title="chuyển đổi tiền tệ">Tiền tệ</a></li>
+							<li><a href="" target="_self" data-id="1" title="Nhật ký tài khoản">Nhật ký tài khoản</a></li>
+							<li><a href="" target="_self" data-id="1" title="shop guild">Shop Guild</a></li>
+						</ul>
+					</li>
+					<li data-id="4" data-active-path="" class="has-sub">
+						<a data-active-path="" href="#" target="_self" title="Nhân vật">Giới Thiệu Nhân Vật<i class="fa fa-chevron-down"></i><span class="holder" style="border-color: rgba(255, 255, 255, 0.35);"></span></a>
+						<ul style="">
+							<li><a href="" target="_blank" title="DW">Dark Wizard</a></li>
+							<li><a href="" target="_blank" title="Dark Wizard">Dark Knight</a></li>
+							<li><a href="" target="_blank" title="Fairy Elf">Fairy Elf</a></li>
+							<li><a href="" target="_blank" title="Magic Gladiator">Magic Gladiator</a></li>
+							<li><a href="" target="_blank" title="Dark Lord">Dark Lord</a></li>
+							<li><a href="" target="_blank" title="Summoner">Summoner</a></li>
+							<li><a href="" target="_blank" title="Rage Fighter">Rage Fighter</a></li>
+							<li><a href="" target="_blank" title="Grow Lancer">Grow Lancer</a></li>
+							<li><a href="" target="_blank" title="Rune Wizard">Rune Wizard</a></li>
+							<li><a href="" target="_blank" title="Slayer">Slayer</a></li>
+							<li><a href="" target="_blank" title="Gun Crusher">Gun Crusher</a></li>
+							<li><a href="" target="_blank" title="Kundun Mephis">Kundun Mephis</a></li>
+							<li><a href="" target="_blank" title="Lemuria">Lemuria</a></li>
+							<li><a href="" target="_blank" title="Illusion Knight">Illusion Knight</a></li>
+							<li><a href="" target="_blank" title="Alchemist">Alchemist (New)</a></li>
+						</ul>
+					</li>
+					<li data-id="6" data-active-path="" class="has-sub">
+						<a data-active-path="" href="#" target="_self" title="Cơ Bản">Cơ Bản<i class="fa fa-chevron-down"></i><span class="holder" style="border-color: rgba(255, 255, 255, 0.35);"></span></a>
+						<ul style="">
+							<li><a href="" target="_self" data-id="1" title="[Thông tin] Lộ trình phát triển máy chủ Huyền Thoại">[Thông tin] Lộ trình phát triển máy chủ Huyền Thoại</a></li>
+							<li><a href="" target="_self" data-id="1" title="Thông tin Event, Box, Boss">Thông tin Event, Box, Boss</a></li>
+							<li><a href="" target="_self" data-id="1" title="Sử dụng Auto trong game">Sử dụng Auto trong game</a></li>
+							<li><a href="" target="_self" data-id="1" title="Cấu trúc Server">Cấu trúc Server</a></li>
+							<li><a href="" target="_self" data-id="1" title="Quy định khi tham gia">Quy định khi tham gia</a></li>
+							<li><a href="" target="_self" data-id="1" title="Bảng phím tắt trong game">Bảng phím tắt trong game</a></li>
+							<li><a href="" target="_self" data-id="1" title="Lệnh trong game">Lệnh trong game</a></li>
+						</ul>
+					</li>
+					<li data-id="2" data-active-path="" class="has-sub">
+						<a data-active-path="" href="#" target="_self" title="Cơ Bản">Nâng Cao<i class="fa fa-chevron-down"></i><span class="holder" style="border-color: rgba(255, 255, 255, 0.35);"></span></a>
+						<ul style="">
+							<li><a href="" target="_self" data-id="1" title="Nhiệm vụ mở rộng Kho chứa đồ">Nhiệm vụ mở rộng Kho chứa đồ</a></li>
+							<li><a href="" target="_self" data-id="1" title="Thông tin Drop item theo Map và Quái">Thông tin Drop item theo Map và Quái</a></li>
+							<li><a href="" target="_self" data-id="1" title="Nhiệm vụ tẩy Master 3">Nhiệm vụ tẩy Master 3</a></li>
+							<li><a href="" target="_self" data-id="1" title="Giờ săn bắn Mini Boss (Thỏ ô dù...)">Giờ săn bắn Mini Boss (Thỏ ô dù...)</a></li>
+							<li><a href="" target="_self" data-id="1" title="Thông tin Gói V.I.P">Thông tin Gói V.I.P</a></li>
+							<li><a href="" target="_blank" title="">Hệ thống Thuộc Tính</a></li>
+							<li><a href="" target="_blank" title="">Sách thuộc tính</a></li>
+							<li><a href="" target="_blank" title="">Linh Thạch</a></li>
+							<li><a href="" target="_blank" title="">Sách thuộc tính Master</a></li>
+							<li><a href="" target="_blank" title="">Linh thạch Master</a></li>
+						</ul>
+					</li>
+					<li data-id="7" data-active-path="" class="has-sub">
+						<a data-active-path="" href="#" target="_self" title="Hệ Thống Ép Đồ">Hệ Thống Ép Đồ<i class="fa fa-chevron-down"></i><span class="holder" style="border-color: rgba(255, 255, 255, 0.35);"></span></a>
+						<ul style="">
+							<li><a href="" target="_blank" title="Ép Wing 1 2 3 4">Ép Wing 1</a></li>
+							<li><a href="" target="_blank" title="Ép Wing 1 2 3 4">Ép Wing 2</a></li>
+							<li><a href="" target="_blank" title="Ép Wing 1 2 3 4">Ép Wing 2.5</a></li>
+							<li><a href="" target="_blank" title="Ép Wing 1 2 3 4">Ép Wing 3</a></li>
+							<li><a href="" target="_blank" title="Ép Wing 1 2 3 4">Ép Wing 4</a></li>
+						</ul>
+					</li>
+					<li data-id="8" data-active-path="" class="has-sub">
+						<a data-active-path="" href="#" target="_self" title="Hệ thống vật phẩm">Hệ thống vật phẩm<i class="fa fa-chevron-down"></i><span class="holder" style="border-color: rgba(255, 255, 255, 0.35);"></span></a>
+						<ul style="">
+							<li><a href="" target="_blank" title="">Thú cưỡi Vệ Thần</a></li>
+							<li><a href="" target="_blank" title="">Hệ thống Cổ Vật</a></li>
+							<li><a href="" target="_self" data-id="1" title="Hệ thống đồ Ruud">Hệ thống đồ Ruud</a></li>
+							<li><a href="" target="_blank" title="">Các loại set Thần</a></li>
+							<li><a href="" target="_blank" title="">Các loại set Ruud</a></li>
+							<li><a href="" target="_blank" title="">Khuyên tai</a></li>
+							<li><a href="" target="_blank" title="">Cánh</a></li>
+							<li><a href="" target="_blank" title="">Sách thuộc tính</a></li>
+							<li><a href="" target="_blank" title="">Các loại Linh Thạch</a></li>
+							<li><a href="" target="_blank" title="">Nhẫn và Dây chuyền</a></li>
+							<li><a href="" target="_blank" title="">Các loại Pet Muun</a></li>
+							<li><a href="" target="_blank" title="">Các loại Cổ vật</a></li>
+						</ul>
+					</li>
+					<li data-id="5" data-active-path="" class="has-sub">
+						<a data-active-path="" href="#" target="_self" title="Sự Kiện Trong Game">Sự Kiện Trong Game<i class="fa fa-chevron-down"></i><span class="holder" style="border-color: rgba(255, 255, 255, 0.35);"></span></a>
+						<ul style="">
+							<li><a href="" target="_blank" title="">Huyết Lâu</a></li>
+							<li><a href="" target="_blank" title="">Quảng Trường Quỷ</a></li>
+							<li><a href="" target="_blank" title="">Hỗn Nguyên Lâu</a></li>
+							<li><a href="" target="_blank" title="">Đền Ảo Ảnh</a></li>
+							<li><a href="" target="_blank" title="">Pháo đài Varka</a></li>
+							<li><a href="" target="_blank" title="">Mê Cung</a></li>
+							<li><a href="" target="_blank" title="">Đại Chiến Boss</a></li>
+							<li><a href="" target="_blank" title="">Arca War</a></li>
+							<li><a href="" target="_blank" title="">Cuốc mỏ Bless</a></li>
+							<li><a href="" target="_self" data-id="1" title="Chính sách hỗ trợ Guild và Liên Minh">Chính sách hỗ trợ Guild và Liên Minh</a></li>
+
+						</ul>
+					</li>
+					<li data-id="3" data-active-path="" class="has-sub">
+						<a data-active-path="" href="#" target="_self" title="Cơ Bản">Tiện Ích<i class="fa fa-chevron-down"></i><span class="holder" style="border-color: rgba(255, 255, 255, 0.35);"></span></a>
+						<ul style="">
+							<li><a href="" target="_self" data-id="1" title="Bảng điều khiển và báo giờ Sự kiện - Game Dashboard">Bảng điều khiển và báo giờ Sự kiện - Game Dashboard</a></li>
+							<li><a href="" target="_self" data-id="1" title="Mẹo cài đặt nhặt item">Mẹo cài đặt nhặt item</a></li>
+							<li><a href="" target="_self" data-id="1" title="Hướng dẫn nhận Giftcode">Hướng dẫn nhận Giftcode</a></li>
+							<li><a href="" target="_self" data-id="1" title="Season Pass - Nhiệm vụ thử thách tháng">Season Pass - Nhiệm vụ thử thách tháng</a></li>
+						</ul>
+					</li>
+					<li data-id="5" data-active-path="" class="has-sub">
+						<a data-active-path="" href="#" target="_self" title="Bảng Xếp Hạng">Bảng Xếp Hạng<i class="fa fa-chevron-down"></i><span class="holder" style="border-color: rgba(255, 255, 255, 0.35);"></span></a>
+						<ul style="">
+							<li><a href="" target="_self" data-id="1" title="Xếp hạng">Xếp Hạng Nhân Vật</a></li>
+							<li><a href="" target="_self" data-id="1" title="Xếp hạng">Xếp Hạng Boss</a></li>
+							<li><a href="" target="_self" data-id="1" title="Xếp hạng">Xếp Hạng Sự Kiện</a></li>
+						</ul>
+					</li>
+				</ul>
+			</div>
+		</td>
+	</tr>
+</table>

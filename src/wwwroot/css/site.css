@@ -1,0 +1,111 @@
+html {
+    font-size: 14px;
+}
+
+@media (min-width: 768px) {
+    html {
+        font-size: 16px;
+    }
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+html {
+    position: relative;
+    min-height: 100%;
+}
+
+body {
+    margin-bottom: 60px;
+}
+
+nav {
+    background: url(../images/navBg_c.png) repeat-x center top;
+    width: 100%;
+    position: absolute;
+    z-index: 3;
+}
+
+.navbar {
+    padding: 0;
+}
+
+.container-fluid {
+    margin: 0;
+    padding: 0;
+}
+
+.navbar-nav {
+    display: inline-block;
+    float: left;
+    font-weight: bold;
+    /*padding-left: 10px;*/
+    line-height: 40px;
+}
+
+.nav-link {
+    font-size: 15px;
+    color: #cbdff3;
+    text-shadow: 0px 0px 5px #000;
+    display: inline;
+    float: left;
+    text-align: center;
+    width: 100px;
+    /*margin-left: 20px;*/
+    color: #808086 !important;
+}
+
+    .nav-link:hover, .nav-link.active {
+        background: url(../images/xian3.png) no-repeat 0 96%;
+        color: #d3a36d;
+        text-shadow: 0px 0px 5px #b46634;
+        text-decoration: none;
+    }
+
+.mb-3 {
+    margin-bottom: 0 !important;
+}
+
+div.header {
+    background: url(../images/hdBg.jpg) no-repeat center top;
+    background-color: #170302;
+    height: 494px;
+}
+
+div.content {
+    background: url(../images/ctBg.jpg) no-repeat center top;
+    margin-top: -1px;
+}
+
+    div.content .container {
+        background: url(../images/ctNBg.jpg) no-repeat;
+        /*height: 1612px;*/
+        padding: 0 10px;
+        width: 1022px;
+    }
+
+.border-top.footer {
+    background: url(../images/iFBg_c.jpg) repeat-x center bottom;
+}
+
+.taigame {
+    display: block;
+    width: 301px;
+    height: 177px;
+    background: url(../images/iconMap.png) no-repeat -529px 0;
+    text-indent: -9999em;
+    margin-left: -20px;
+}
+
+    .taigame:hover {
+        background-position: -529px -196px;
+    }
+
+.contentpage {
+    background-color: #1c1d1f;
+    color: #808086;
+    margin-top: 4px;
+    padding: 5px;
+}
