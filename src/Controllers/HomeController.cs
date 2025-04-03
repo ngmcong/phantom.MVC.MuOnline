@@ -1,4 +1,3 @@
-using System;
 using System.Data;
 using System.Diagnostics;
 using System.IdentityModel.Tokens.Jwt;
@@ -6,7 +5,6 @@ using System.Security.Claims;
 using System.Text;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Identity.Client;
 using Microsoft.IdentityModel.Tokens;
 using OfficeOpenXml;
 using phantom.Core.Crypto;
@@ -18,6 +16,7 @@ namespace phantom.MVC.MuOnline.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private static DataTable? _itemDb;
 
         public HomeController(ILogger<HomeController> logger)
         {
@@ -202,57 +201,79 @@ namespace phantom.MVC.MuOnline.Controllers
                     var sublist2 = SplitToSublists(sublists!, 8);
                     bool[,] bools = new bool[15, 8];
 
-                    DataTable dataTable = new DataTable();
-                    using (var package = new ExcelPackage(new FileInfo("G:\\Projects\\phantom\\phantom.MVC.MuOnline\\src\\wwwroot\\db\\Items.xlsx")))
+                    if (_itemDb == null)
                     {
-                        bool hasHeader = true; // Set to true if the first row contains headers
-                        ExcelWorksheet worksheet = package.Workbook.Worksheets[0]; // Assuming the first sheet
-                        int rowCount = worksheet.Dimension.Rows;
-                        int colCount = worksheet.Dimension.Columns;
-                        // Add columns to DataTable
-                        for (int col = 1; col <= colCount; col++)
+                        _itemDb = new DataTable();
+                        using (var package = new ExcelPackage(new FileInfo("G:\\Projects\\phantom\\phantom.MVC.MuOnline\\src\\wwwroot\\db\\Items.xlsx")))
                         {
-                            dataTable.Columns.Add(worksheet.Cells[1, col].Value?.ToString() ?? $"Column{col}"); //handles null header values.
-                        }
-                        // Add rows to DataTable
-                        int startRow = hasHeader ? 2 : 1; // Skip header row if present.
-                        for (int row = startRow; row <= rowCount; row++)
-                        {
-                            DataRow dataRow = dataTable.NewRow();
+                            bool hasHeader = true; // Set to true if the first row contains headers
+                            ExcelWorksheet worksheet = package.Workbook.Worksheets[0]; // Assuming the first sheet
+                            int rowCount = worksheet.Dimension.Rows;
+                            int colCount = worksheet.Dimension.Columns;
+                            // Add columns to DataTable
                             for (int col = 1; col <= colCount; col++)
                             {
-                                dataRow[col - 1] = worksheet.Cells[row, col].Value; // Handles null cell values.
+                                _itemDb.Columns.Add(worksheet.Cells[1, col].Value?.ToString() ?? $"Column{col}"); //handles null header values.
                             }
-                            dataTable.Rows.Add(dataRow);
+                            // Add rows to DataTable
+                            int startRow = hasHeader ? 2 : 1; // Skip header row if present.
+                            for (int row = startRow; row <= rowCount; row++)
+                            {
+                                DataRow dataRow = _itemDb.NewRow();
+                                for (int col = 1; col <= colCount; col++)
+                                {
+                                    dataRow[col - 1] = worksheet.Cells[row, col].Value; // Handles null cell values.
+                                }
+                                _itemDb.Rows.Add(dataRow);
+                            }
                         }
                     }
 
+                    List<List<string>> tableCells = new List<List<string>>();
                     for (int y = 0; y < 15; y++)
                     {
-                        for (int x = 0; x < 8; x++)
+                        tableCells.Add(new List<string> { "<td>&nbsp;&nbsp;</td>"
+                            , "<td>&nbsp;&nbsp;</td>"
+                            , "<td>&nbsp;&nbsp;</td>"
+                            , "<td>&nbsp;&nbsp;</td>"
+                            , "<td>&nbsp;&nbsp;</td>"
+                            , "<td>&nbsp;&nbsp;</td>"
+                            , "<td>&nbsp;&nbsp;</td>"
+                            , "<td>&nbsp;&nbsp;</td>"
+                        });
+                    }
+                    for (int x = 0; x < 8; x++)
+                    {
+                        for (int y = 0; y < 15; y++)
                         {
                             var item = sublist2.ElementAt(y).ElementAt(x);
                             if (item.Any(x => x != 255) == false) continue;
-                            bools[y, x] = true;
                             var id = item.ElementAt(0);
                             var tp = item.ElementAt(9) / 16;
-                            DataRow[] results = dataTable.Select($"TP = '{tp}' AND ID = '{id}'");
+                            DataRow[] results = _itemDb.Select($"TP = '{tp}' AND ID = '{id}'");
                             if (results.Length != 1)
                             {
                                 throw new Exception("Error DB Item");
                             }
                             var itemX = Convert.ToInt32(results[0]["X"]);
                             var itemY = Convert.ToInt32(results[0]["Y"]);
-                            for (int ix = 0; ix < itemX; ix++)
+                            if (itemX == 1 && itemY == 1) tableCells[y][x] = $"<td style='background-color: #ccc;'>&nbsp;&nbsp;</td>";
+                            else tableCells[y][x] = $"<td style='background-color: #ccc;' colspan=\"{itemX}\" rowspan=\"{itemY}\">&nbsp;&nbsp;</td>";
+                            if (itemX != 1 || itemY != 1)
                             {
-                                for (int iy = 0; iy < itemY; iy++)
+                                for (int ix = 0; ix < itemX; ix++)
                                 {
-                                    bools[y + iy, x + ix] = true;
+                                    for (int iy = 0; iy < itemY; iy++)
+                                    {
+                                        if (ix == 0 && iy == 0) continue;
+                                        tableCells[y + iy][x + ix] = string.Empty;
+                                    }
                                 }
                             }
                         }
                     }
-                    ViewBag.WareHouse = bools;
+                    var wareHouseHTML = $"<table id=\"warehouse\">{string.Join("", tableCells.Select(x => string.Join("", x.Where(c => string.IsNullOrEmpty(c) == false))).Select(x => $"<tr>{x}</tr>"))}</table>";
+                    ViewBag.WareHouseHTML = wareHouseHTML;
                 }
                 catch (Exception ex)
                 {

@@ -9,17 +9,7 @@
 		</td>
 		<td style="vertical-align: top; width: 100%;">
 			<div class="contentpage">
-				<table id="warehouse">
-					@for (int y = 0; y < 15; y++)
-					{
-						<tr>
-							@for (int x = 0; x < 8; x++)
-							{
-								<td>@(wareHouse[y, x] ? "X" : Html.Raw("&nbsp;"))</td>
-							}
-						</tr>
-					}
-				</table>
+				@Html.Raw(ViewBag.WareHouseHTML)
 			</div>
 		</td>
 	</tr>
