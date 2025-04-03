@@ -304,15 +304,21 @@
 						@* <a class="btn_signup ir" href=""></a> *@
 					</form>
 				</div>
-				<div class="logined login_later" id="logined" style="display: none">
-					<table>
+				<div class="logined login_later" id="logined" style="display: none; width: 100%;">
+					<table style="width: 100%;">
 						<tr>
-							<td>Xin chào <span class="userName">kevinloh </span>!</td>
-							<td style="text-align: right;"><a class="logout" onclick="logout()">Log Out</a></td>
+							<td colspan="2">Xin chào <span class="userName">kevinloh </span>!</td>
+						</tr>
+						<tr>
+							<td><a href="" class="select" style="margin-right: 10px;">Mua VIP</a></td>
+							<td><a href="" class="select" style="margin-right: 10px;">NẠP WCOIN</a></td>
+						</tr>
+						<tr>
+							<td colspan="2">Số WCOIN <span class="wcoinQty"></span></td>
 						</tr>
 						<tr>
 							<td><a href='@Url.Action("ChangePass", "Home")' class="link_account ir">Đổi MK</a></td>
-							<td><a href="#" class="link_recharge ir">Recharge</a></td>
+							<td style="text-align: right;"><a class="logout" onclick="logout()">Log Out</a></td>
 						</tr>
 					</table>
 				</div>
@@ -335,7 +341,7 @@
 						</ul>
 					</li>
 					<li data-id="4" data-active-path="" class="has-sub">
-						<a data-active-path="" href="#" target="_self" title="Nhân vật">Giới Thiệu Nhân Vật<i class="fa fa-chevron-down"></i><span class="holder" style="border-color: rgba(255, 255, 255, 0.35);"></span></a>
+						<a data-active-path="" target="_self" title="Nhân vật">Giới Thiệu Nhân Vật<i class="fa fa-chevron-down"></i><span class="holder" style="border-color: rgba(255, 255, 255, 0.35);"></span></a>
 						<ul style="">
 							<li><a href="" target="_blank" title="DW">Dark Wizard</a></li>
 							<li><a href="" target="_blank" title="Dark Wizard">Dark Knight</a></li>
@@ -355,7 +361,7 @@
 						</ul>
 					</li>
 					<li data-id="6" data-active-path="" class="has-sub">
-						<a data-active-path="" href="#" target="_self" title="Cơ Bản">Cơ Bản<i class="fa fa-chevron-down"></i><span class="holder" style="border-color: rgba(255, 255, 255, 0.35);"></span></a>
+						<a data-active-path="" target="_self" title="Cơ Bản">Cơ Bản<i class="fa fa-chevron-down"></i><span class="holder" style="border-color: rgba(255, 255, 255, 0.35);"></span></a>
 						<ul style="">
 							<li><a href="" target="_self" data-id="1" title="[Thông tin] Lộ trình phát triển máy chủ Huyền Thoại">[Thông tin] Lộ trình phát triển máy chủ Huyền Thoại</a></li>
 							<li><a href="" target="_self" data-id="1" title="Thông tin Event, Box, Boss">Thông tin Event, Box, Boss</a></li>
@@ -367,7 +373,7 @@
 						</ul>
 					</li>
 					<li data-id="2" data-active-path="" class="has-sub">
-						<a data-active-path="" href="#" target="_self" title="Cơ Bản">Nâng Cao<i class="fa fa-chevron-down"></i><span class="holder" style="border-color: rgba(255, 255, 255, 0.35);"></span></a>
+						<a data-active-path="" target="_self" title="Cơ Bản">Nâng Cao<i class="fa fa-chevron-down"></i><span class="holder" style="border-color: rgba(255, 255, 255, 0.35);"></span></a>
 						<ul style="">
 							<li><a href="" target="_self" data-id="1" title="Nhiệm vụ mở rộng Kho chứa đồ">Nhiệm vụ mở rộng Kho chứa đồ</a></li>
 							<li><a href="" target="_self" data-id="1" title="Thông tin Drop item theo Map và Quái">Thông tin Drop item theo Map và Quái</a></li>
@@ -382,7 +388,7 @@
 						</ul>
 					</li>
 					<li data-id="7" data-active-path="" class="has-sub">
-						<a data-active-path="" href="#" target="_self" title="Hệ Thống Ép Đồ">Hệ Thống Ép Đồ<i class="fa fa-chevron-down"></i><span class="holder" style="border-color: rgba(255, 255, 255, 0.35);"></span></a>
+						<a data-active-path="" target="_self" title="Hệ Thống Ép Đồ">Hệ Thống Ép Đồ<i class="fa fa-chevron-down"></i><span class="holder" style="border-color: rgba(255, 255, 255, 0.35);"></span></a>
 						<ul style="">
 							<li><a href="" target="_blank" title="Ép Wing 1 2 3 4">Ép Wing 1</a></li>
 							<li><a href="" target="_blank" title="Ép Wing 1 2 3 4">Ép Wing 2</a></li>
@@ -392,7 +398,7 @@
 						</ul>
 					</li>
 					<li data-id="8" data-active-path="" class="has-sub">
-						<a data-active-path="" href="#" target="_self" title="Hệ thống vật phẩm">Hệ thống vật phẩm<i class="fa fa-chevron-down"></i><span class="holder" style="border-color: rgba(255, 255, 255, 0.35);"></span></a>
+						<a data-active-path="" target="_self" title="Hệ thống vật phẩm">Hệ thống vật phẩm<i class="fa fa-chevron-down"></i><span class="holder" style="border-color: rgba(255, 255, 255, 0.35);"></span></a>
 						<ul style="">
 							<li><a href="" target="_blank" title="">Thú cưỡi Vệ Thần</a></li>
 							<li><a href="" target="_blank" title="">Hệ thống Cổ Vật</a></li>
@@ -409,7 +415,7 @@
 						</ul>
 					</li>
 					<li data-id="5" data-active-path="" class="has-sub">
-						<a data-active-path="" href="#" target="_self" title="Sự Kiện Trong Game">Sự Kiện Trong Game<i class="fa fa-chevron-down"></i><span class="holder" style="border-color: rgba(255, 255, 255, 0.35);"></span></a>
+						<a data-active-path="" target="_self" title="Sự Kiện Trong Game">Sự Kiện Trong Game<i class="fa fa-chevron-down"></i><span class="holder" style="border-color: rgba(255, 255, 255, 0.35);"></span></a>
 						<ul style="">
 							<li><a href="" target="_blank" title="">Huyết Lâu</a></li>
 							<li><a href="" target="_blank" title="">Quảng Trường Quỷ</a></li>
@@ -425,7 +431,7 @@
 						</ul>
 					</li>
 					<li data-id="3" data-active-path="" class="has-sub">
-						<a data-active-path="" href="#" target="_self" title="Cơ Bản">Tiện Ích<i class="fa fa-chevron-down"></i><span class="holder" style="border-color: rgba(255, 255, 255, 0.35);"></span></a>
+						<a data-active-path="" target="_self" title="Cơ Bản">Tiện Ích<i class="fa fa-chevron-down"></i><span class="holder" style="border-color: rgba(255, 255, 255, 0.35);"></span></a>
 						<ul style="">
 							<li><a href="" target="_self" data-id="1" title="Bảng điều khiển và báo giờ Sự kiện - Game Dashboard">Bảng điều khiển và báo giờ Sự kiện - Game Dashboard</a></li>
 							<li><a href="" target="_self" data-id="1" title="Mẹo cài đặt nhặt item">Mẹo cài đặt nhặt item</a></li>
@@ -434,7 +440,7 @@
 						</ul>
 					</li>
 					<li data-id="5" data-active-path="" class="has-sub">
-						<a data-active-path="" href="#" target="_self" title="Bảng Xếp Hạng">Bảng Xếp Hạng<i class="fa fa-chevron-down"></i><span class="holder" style="border-color: rgba(255, 255, 255, 0.35);"></span></a>
+						<a data-active-path="" target="_self" title="Bảng Xếp Hạng">Bảng Xếp Hạng<i class="fa fa-chevron-down"></i><span class="holder" style="border-color: rgba(255, 255, 255, 0.35);"></span></a>
 						<ul style="">
 							<li><a href="" target="_self" data-id="1" title="Xếp hạng">Xếp Hạng Nhân Vật</a></li>
 							<li><a href="" target="_self" data-id="1" title="Xếp hạng">Xếp Hạng Boss</a></li>
@@ -453,6 +459,17 @@
 			$('#loging').hide();
 			$('#logined').show();
 		}
+		$('#left-nav ul:first-child li').click(function() {
+			if ($(this).hasClass('open')) {
+				$(this).removeClass('open');
+				$(this).find('ul').slideUp();
+			} else {
+				$('#left-nav ul:first-child li').removeClass('open');
+				$('#left-nav ul:first-child li').find('ul').slideUp();
+				$(this).addClass('open');
+				$(this).find('ul').slideDown();
+			}
+		});
 	});
 	function reloadMainPage() {
 		var url = '@Url.Action("Index", "Home")';
