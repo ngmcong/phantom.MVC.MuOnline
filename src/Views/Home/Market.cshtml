@@ -1,0 +1,36 @@
+﻿@{
+	ViewData["Title"] = "Chợ";
+	var wareHouse = (bool[,])ViewBag.WareHouse!;
+}
+<table>
+	<tr>
+		<td style="vertical-align: top; white-space: nowrap;">
+			<partial name="~/Views/Shared/_LeftMenu.cshtml" />
+		</td>
+		<td style="vertical-align: top; width: 100%;">
+			<div class="contentpage">
+				<table id="warehouse">
+					@for (int y = 0; y < 15; y++)
+					{
+						<tr>
+							@for (int x = 0; x < 8; x++)
+							{
+								<td>@(wareHouse[y, x] ? "X" : Html.Raw("&nbsp;"))</td>
+							}
+						</tr>
+					}
+				</table>
+			</div>
+		</td>
+	</tr>
+</table>
+<style type="text/css">
+	#warehouse td {
+		border: 1px solid #8f8f8f;
+		min-height: 30px;
+		min-width: 1cm;
+		min-height: 1cm;
+		text-align: center;
+		vertical-align: middle;
+	}
+</style>

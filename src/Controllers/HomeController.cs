@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Identity.Client;
 using Microsoft.IdentityModel.Tokens;
+using OfficeOpenXml;
 using phantom.Core.Crypto;
 using phantom.Core.WZMD5MOD;
 using phantom.MVC.MuOnline.Models;
@@ -178,6 +179,87 @@ namespace phantom.MVC.MuOnline.Controllers
             {
                 return new APIModel(ex.Message);
             }
+        }
+
+        private IEnumerable<IEnumerable<T>> SplitToSublists<T>(IEnumerable<T> source, int size = 16)
+        {
+            return source
+                     .Select((x, i) => new { Index = i, Value = x })
+                     .GroupBy(x => x.Index / size)
+                     .Select(x => x.Select(v => v.Value).ToList())
+                     .ToList();
+        }
+
+        public IActionResult Market()
+        {
+            using (SqlDbConnection sqlDbConnection = new SqlDbConnection())
+            {
+                try
+                {
+                    string query = "SELECT Items FROM [warehouse]";
+                    var data = sqlDbConnection.ExecuteScalarAsync(query).Result as byte[];
+                    var sublists = SplitToSublists(data!);
+                    var sublist2 = SplitToSublists(sublists!, 8);
+                    bool[,] bools = new bool[15, 8];
+
+                    DataTable dataTable = new DataTable();
+                    using (var package = new ExcelPackage(new FileInfo("G:\\Projects\\phantom\\phantom.MVC.MuOnline\\src\\wwwroot\\db\\Items.xlsx")))
+                    {
+                        bool hasHeader = true; // Set to true if the first row contains headers
+                        ExcelWorksheet worksheet = package.Workbook.Worksheets[0]; // Assuming the first sheet
+                        int rowCount = worksheet.Dimension.Rows;
+                        int colCount = worksheet.Dimension.Columns;
+                        // Add columns to DataTable
+                        for (int col = 1; col <= colCount; col++)
+                        {
+                            dataTable.Columns.Add(worksheet.Cells[1, col].Value?.ToString() ?? $"Column{col}"); //handles null header values.
+                        }
+                        // Add rows to DataTable
+                        int startRow = hasHeader ? 2 : 1; // Skip header row if present.
+                        for (int row = startRow; row <= rowCount; row++)
+                        {
+                            DataRow dataRow = dataTable.NewRow();
+                            for (int col = 1; col <= colCount; col++)
+                            {
+                                dataRow[col - 1] = worksheet.Cells[row, col].Value; // Handles null cell values.
+                            }
+                            dataTable.Rows.Add(dataRow);
+                        }
+                    }
+
+                    for (int y = 0; y < 15; y++)
+                    {
+                        for (int x = 0; x < 8; x++)
+                        {
+                            var item = sublist2.ElementAt(y).ElementAt(x);
+                            if (item.Any(x => x != 255) == false) continue;
+                            bools[y, x] = true;
+                            var id = item.ElementAt(0);
+                            var tp = item.ElementAt(9) / 16;
+                            DataRow[] results = dataTable.Select($"TP = '{tp}' AND ID = '{id}'");
+                            if (results.Length != 1)
+                            {
+                                throw new Exception("Error DB Item");
+                            }
+                            var itemX = Convert.ToInt32(results[0]["X"]);
+                            var itemY = Convert.ToInt32(results[0]["Y"]);
+                            for (int ix = 0; ix < itemX; ix++)
+                            {
+                                for (int iy = 0; iy < itemY; iy++)
+                                {
+                                    bools[y + iy, x + ix] = true;
+                                }
+                            }
+                        }
+                    }
+                    ViewBag.WareHouse = bools;
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error: {ex.Message}");
+                }
+            }
+            return View();
         }
     }
 
