@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/phantom.MVC.MuOnline.styles.css" asp-append-version="true" />
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
 </head>
 <body>
     <header>
@@ -70,11 +71,39 @@
             &copy; 2025 - phantom.MVC.MuOnline - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="~/js/crypto-js.min.js"></script>
+    @* <script src="~/js/jquery.cookie.min.js"></script> *@
     <script type="text/javascript">
+        function getCookie(name) {
+          const cookieString = document.cookie;
+          if (!cookieString) {
+            return null;
+          }
+
+          let cookieValue = null;
+          $.each(cookieString.split(';'), function(index, cookie) {
+            cookie = cookie.trim();
+            if (cookie.startsWith(name + '=')) {
+              cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+              return false; // Break the loop
+            }
+          });
+          return cookieValue;
+        }
+        function setCookie(name, value, days) {
+          let expires = '';
+          if (days) {
+            let date = new Date();
+            date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+            expires = '; expires=' + date.toUTCString();
+          }
+          document.cookie = name + '=' + encodeURIComponent(value) + expires + '; path=/';
+        }
+        function deleteCookie(name) {
+          document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT; path=/;';
+        }
         const key = "YourSecretKey123"; // 16 bytes for AES-128
         const iv = "InitVector123450"; // 16 bytes
         function encryptString(plainText, key, iv) {

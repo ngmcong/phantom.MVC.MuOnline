@@ -1,8 +1,10 @@
+using System;
 using System.Data;
 using System.Diagnostics;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Identity.Client;
 using Microsoft.IdentityModel.Tokens;
@@ -145,6 +147,38 @@ namespace phantom.MVC.MuOnline.Controllers
                 return new APIModel(ex.Message);
             }
         }
+
+        public IActionResult ChangePass()
+        {
+            return View();
+        }
+
+        [HttpPost, Authorize]
+        public async Task<APIModel> ChangePass([FromBody] RegisterModel model)
+        {
+            try
+            {
+                var loginVal = await Login(model);
+                if (loginVal.RetCode != 0)
+                {
+                    return new APIModel("Sai thông tin tài khoản.");
+                }
+                model.NewPassword = CryptoHelper.DecryptString(model.NewPassword!);
+                using (var dbConnection = new SqlDbConnection())
+                {
+                    var retQueries = await dbConnection.ExecuteNonQueryAsync($"EXEC SP_MD5_ENCODE_VALUE @btInStr='{model.NewPassword}',@btInStrIndex='{model.Name}'");
+                    if (retQueries <= 0)
+                    {
+                        return new APIModel("Không thể tạo được thông tin tài khoản.");
+                    }
+                }
+                return new APIModel();
+            }
+            catch (Exception ex)
+            {
+                return new APIModel(ex.Message);
+            }
+        }
     }
 
     public class MEMB_INFO
@@ -158,6 +192,7 @@ namespace phantom.MVC.MuOnline.Controllers
         public string? Name { get; set; }
         public string? Email { get; set; }
         public string? Password { get; set; }
+        public string? NewPassword { get; set; }
     }
 
     public class APIModel

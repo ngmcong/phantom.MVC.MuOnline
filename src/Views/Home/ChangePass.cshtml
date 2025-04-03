@@ -1,5 +1,5 @@
 ﻿@{
-	ViewData["Title"] = "Đăng ký tài khoản";
+	ViewData["Title"] = "Đổi mật khẩu";
 }
 <link rel="stylesheet" href="~/css/register.css" />
 <table>
@@ -11,39 +11,20 @@
 			<div class="contentpage">
 				<table class="contenttd">
 					<tr>
-						<td style="white-space: nowrap;">Tên đăng nhập: </td>
-						<td style="width: 100%;">
-							<input type="text" id="name" name="name" />
-						</td>
+						<td>Tài khoản</td>
+						<td><span style="padding: 5px;" id="userName"></span></td>
 					</tr>
 					<tr>
-						<td>Email: </td>
-						<td>
-							<input type="email" id="email" name="email" />
-						</td>
+						<td>Mật khẩu hiện tại</td>
+						<td><input id="password" name="password" type="password" /></td>
 					</tr>
 					<tr>
-						<td>Mật khẩu: </td>
-						<td>
-							<input id="password" name="password" type="password" />
-						</td>
+						<td>Mật khẩu mới</td>
+						<td><input id="newpassword" name="newpassword" type="password" /></td>
 					</tr>
 					<tr>
-						<td style="white-space: nowrap;">Xác nhận mật khẩu: </td>
-						<td>
-							<input type="password" />
-						</td>
-					</tr>
-					<tr>
-						<td style="text-align: center;">
-							<img src="https://ht.dammemu.com/ajax/captcha/200/50/170/6/24/captcha_text_reg" alt="CAPTCHA" id="captcha_image_reg">
-						</td>
-						<td>
-							<input type="text" />
-						</td>
-					</tr>
-					<tr>
-						<td colspan="2"><input name="confirmed" type="checkbox" />Tôi đã đọc và đồng ý <a href="">quy định</a></td>
+						<td>Xác nhận mật khẩu mới</td>
+						<td><input id="confirmnewpassword" type="password" /></td>
 					</tr>
 					<tr>
 						<td colspan="2" style="text-align: center;">
@@ -55,13 +36,19 @@
 		</td>
 	</tr>
 </table>
-
 @section Scripts {
 	<script type="text/javascript">
 		$(document).ready(function() {
+			var tokenObject = JSON.parse(getCookie('token'));
+			$('#userName').text(tokenObject.account);
 			$("button[type=submit]").click(function() {
-				if ($('input:checkbox[name=confirmed]').is(':checked') == false) {
-					setDialogText('Vui lòng xác nhận đồng ý các điều khoản & quy định!');
+				if ($('#password').val() == '' || $('#newpassword').val() == '') {
+					setDialogText('Vui lòng xác nhận mật khẩu!');
+					myModal.show();
+					return;
+				}
+				if ($('#confirmnewpassword').val() != $('#newpassword').val()) {
+					setDialogText('Mật khẩu mới không trùng khớp!');
 					myModal.show();
 					return;
 				}
@@ -69,17 +56,18 @@
 				var retData;
 				var password = $('#password').val();
 				var encrypted = encryptString(password, key, iv);
+				var encryptedNewPassword = encryptString($('#newpassword').val(), key, iv);
 				$.ajax({
 					type: 'POST',
 					dataType:"json",
 					data: JSON.stringify({
-						"Name": $('#name').val(),
-						"Email": $('#email').val(),
-						"Password": encrypted
+						"Name": $('#userName').text(),
+						"Password": encrypted,
+						"NewPassword": encryptedNewPassword
 					}),
-					url: '@Url.Action("Register", "Home")',
+					url: '@Url.Action("ChangePass", "Home")',
 					headers:{
-						'Authorization' : 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcHBWZXIiOiIwLjAuMCIsImV4cCI6NDcyNjM4OTEyMiwibG9jYWxlIjoiIiwibWFzdGVyVmVyIjoiIiwicGxhdGZvcm0iOiIiLCJwbGF0Zm9ybVZlciI6IiIsInVzZXJJZCI6IiJ9.QIZbmB5_9Xlap_gDhjETfMI6EAmR15yBtIQkWFWJkrg',
+						'Authorization' : 'Bearer ' + tokenObject.token,
 						'Content-Type':'application/json'
 					},
 					success: function(data) {

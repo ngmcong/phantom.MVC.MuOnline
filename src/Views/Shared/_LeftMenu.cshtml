@@ -1,6 +1,4 @@
-﻿
-
-<style type="text/css">
+﻿<style type="text/css">
 	/* Login */
 	.fl {
 		float: left;
@@ -273,7 +271,6 @@
 		display: block !important
 	}
 </style>
-
 <table>
 	<tr>
 		<td><div><a class="taigame" href="">Play Game</a></div></td>
@@ -307,21 +304,17 @@
 						@* <a class="btn_signup ir" href=""></a> *@
 					</form>
 				</div>
-				<a class="btn_signup ir" href=""></a>
 				<div class="logined login_later" id="logined" style="display: none">
-					<a class="btn_signup ir" href="">
-					</a><form action="" class="form_login clearfix">
-						<a class="btn_signup ir" href="">
-						</a><p class="userInfo"><a class="btn_signup ir" href="">Hello! <span class="userName">kevinloh </span> </a><a href="" class="logout">Log Out</a></p>
-						<div class="visitedInfo myServer" id="last_login">
-						</div>
-						<div class="visitedInfo" id="last_server">
-						</div>
-						<p class="operation">
-							<a href="#" class="link_account ir">Account</a>
-							<a href="#" class="link_recharge ir">Recharge</a>
-						</p>
-					</form>
+					<table>
+						<tr>
+							<td>Xin chào <span class="userName">kevinloh </span>!</td>
+							<td style="text-align: right;"><a class="logout" onclick="logout()">Log Out</a></td>
+						</tr>
+						<tr>
+							<td><a href='@Url.Action("ChangePass", "Home")' class="link_account ir">Đổi MK</a></td>
+							<td><a href="#" class="link_recharge ir">Recharge</a></td>
+						</tr>
+					</table>
 				</div>
 			</div>
 		</td>
@@ -454,6 +447,17 @@
 	</tr>
 </table>
 <script type="text/javascript">
+	$(document).ready(function() {
+		if (getCookie('token')) {
+			$('#logined .userName').text(JSON.parse(getCookie('token')).account);
+			$('#loging').hide();
+			$('#logined').show();
+		}
+	});
+	function reloadMainPage() {
+		var url = '@Url.Action("Index", "Home")';
+		window.location.href = url;
+	}
 	function loginClicked() {
 		$('#dialog').show();
 		var retData;
@@ -481,8 +485,11 @@
 				console.log(data);
 				$('#dialog').hide();
 				if (retData && retData.retCode == 0) {
-					var url = '@Url.Action("Index", "Home")';
-					window.location.href = url;
+					setCookie('token', JSON.stringify({
+							"account": $('#login_input').val(),
+							"token": retData.data.token
+						}), { expires: 7 });
+					reloadMainPage();
 					return;
 				}
 				if (retData) {
@@ -491,5 +498,9 @@
 				}
 			}
 		});
+	}
+	function logout() {
+		deleteCookie('token');
+		reloadMainPage();
 	}
 </script>

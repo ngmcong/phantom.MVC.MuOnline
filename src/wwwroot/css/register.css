@@ -1,0 +1,48 @@
+﻿.button-style {
+    width: auto; /* margin-bottom: 15px; */
+    height: 36px; /* position: relative; */
+    border: none;
+    cursor: pointer;
+    line-height: 0;
+    text-transform: capitalize;
+    padding: 0 21px 2px 21px;
+    vertical-align: top;
+    margin: 5px 0px 14px 0px;
+    background: #bc442b;
+    font-family: 'Ebrima';
+    font-size: 13px;
+    color: #FFFFFF;
+    text-transform: uppercase;
+    font-weight: normal;
+    border-radius: 3px;
+    text-shadow: 0 0 6px rgba(0,0,0,.1), 0 1px 2px rgba(0,0,0,.55);
+    box-shadow: inset 0 2px 0 #ca4c32, inset 0 0 8px rgba(0, 0, 0, 0.13), 0 0 7px rgba(0, 0, 0, 0.24), 0 1px 2px rgba(0, 0, 0, 0.18);
+    transition: all 500ms;
+    -moz-transition: all 500ms;
+    -webkit-transition: all 500ms;
+    -o-transition: all 500ms;
+}
+
+.contenttd {
+    width: 100%;
+}
+
+    .contenttd td {
+        border: 1px solid #8f8f8f;
+        min-height: 30px;
+    }
+
+    .contenttd input[type=text],
+    .contenttd input[type=email],
+    .contenttd input[type=password] {
+        width: calc(100% - 10px);
+        margin: 5px;
+    }
+
+    .contenttd input[type=checkbox] {
+        margin: 15px 5px 15px 5px;
+    }
+
+    .contenttd img {
+        height: 30px;
+    }
