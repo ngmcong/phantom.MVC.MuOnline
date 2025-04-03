@@ -255,10 +255,12 @@ namespace phantom.MVC.MuOnline.Controllers
                             {
                                 throw new Exception("Error DB Item");
                             }
+                            var fileImage = string.Format("{0:0000000}", Convert.ToInt32(results[0][0]));
                             var itemX = Convert.ToInt32(results[0]["X"]);
                             var itemY = Convert.ToInt32(results[0]["Y"]);
-                            if (itemX == 1 && itemY == 1) tableCells[y][x] = $"<td style='background-color: #ccc;'>&nbsp;&nbsp;</td>";
-                            else tableCells[y][x] = $"<td style='background-color: #ccc;' colspan=\"{itemX}\" rowspan=\"{itemY}\">&nbsp;&nbsp;</td>";
+                            var imageHTML = $"<img style='cursor: pointer;' src=\"/images/items/{fileImage}.jpg\" />";
+                            if (itemX == 1 && itemY == 1) tableCells[y][x] = $"<td>{imageHTML}</td>";
+                            else tableCells[y][x] = $"<td colspan=\"{itemX}\" rowspan=\"{itemY}\">{imageHTML}</td>";
                             if (itemX != 1 || itemY != 1)
                             {
                                 for (int ix = 0; ix < itemX; ix++)
