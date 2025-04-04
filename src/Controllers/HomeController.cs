@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using OfficeOpenXml;
 using phantom.Core.Crypto;
+using phantom.Core.SQLClient;
 using phantom.Core.WZMD5MOD;
 using phantom.MVC.MuOnline.Models;
 
@@ -17,6 +18,7 @@ namespace phantom.MVC.MuOnline.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private static DataTable? _itemDb;
+        private const string _connectionString = "Data Source=192.168.2.199;Initial Catalog=MuOnline;User ID=sa;Password=;TrustServerCertificate=True;";
 
         public HomeController(ILogger<HomeController> logger)
         {
@@ -56,7 +58,7 @@ namespace phantom.MVC.MuOnline.Controllers
                 {
                     guid += (new Random()).Next(0, 9);
                 }
-                using (var dbConnection = new SqlDbConnection())
+                using (var dbConnection = new SqlDbConnection(_connectionString))
                 {
                     var dataTable = dbConnection.Fill($"SELECT memb___id,mail_addr FROM [MEMB_INFO] WHERE memb___id='{model.Name}' OR mail_addr='{model.Email}'");
                     if (dataTable.Rows.Count > 0)
@@ -131,7 +133,7 @@ namespace phantom.MVC.MuOnline.Controllers
                     return new APIModel("Tên tài khoản hoặc mật khẩu không được để trống.");
                 }
                 model.Password = CryptoHelper.DecryptString(model.Password!);
-                using (var dbConnection = new SqlDbConnection())
+                using (var dbConnection = new SqlDbConnection(_connectionString))
                 {
                     var memb__pwd = $"{await dbConnection.ExecuteScalarAsync($"SET ARITHABORT ON; SELECT TOP 1 CAST('' AS XML).value('xs:base64Binary(sql:column(\"memb__pwd\"))', 'varchar(max)') AS memb__pwd FROM [MEMB_INFO] WHERE memb___id='{model.Name}'")}";
                     if (Base64Encode(model.Password!, model.Name!) == memb__pwd)
@@ -164,7 +166,7 @@ namespace phantom.MVC.MuOnline.Controllers
                     return new APIModel("Sai thông tin tài khoản.");
                 }
                 model.NewPassword = CryptoHelper.DecryptString(model.NewPassword!);
-                using (var dbConnection = new SqlDbConnection())
+                using (var dbConnection = new SqlDbConnection(_connectionString))
                 {
                     var retQueries = await dbConnection.ExecuteNonQueryAsync($"EXEC SP_MD5_ENCODE_VALUE @btInStr='{model.NewPassword}',@btInStrIndex='{model.Name}'");
                     if (retQueries <= 0)
@@ -191,7 +193,7 @@ namespace phantom.MVC.MuOnline.Controllers
 
         public IActionResult Market()
         {
-            using (SqlDbConnection sqlDbConnection = new SqlDbConnection())
+            using (SqlDbConnection sqlDbConnection = new SqlDbConnection(_connectionString))
             {
                 try
                 {
