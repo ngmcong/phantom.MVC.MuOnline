@@ -258,7 +258,7 @@ namespace phantom.MVC.MuOnline.Controllers
                             var fileImage = string.Format("{0:0000000}", Convert.ToInt32(results[0][0]));
                             var itemX = Convert.ToInt32(results[0]["X"]);
                             var itemY = Convert.ToInt32(results[0]["Y"]);
-                            var imageHTML = $"<img style='cursor: pointer;' src=\"/images/items/{fileImage}.jpg\" />";
+                            var imageHTML = $"<img style='cursor: pointer;' src=\"/images/items/{fileImage}.png\" />";
                             if (itemX == 1 && itemY == 1) tableCells[y][x] = $"<td>{imageHTML}</td>";
                             else tableCells[y][x] = $"<td colspan=\"{itemX}\" rowspan=\"{itemY}\">{imageHTML}</td>";
                             if (itemX != 1 || itemY != 1)
