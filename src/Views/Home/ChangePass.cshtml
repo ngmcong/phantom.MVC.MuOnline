@@ -39,9 +39,30 @@
 @section Scripts {
 	<script type="text/javascript">
 		$(document).ready(function() {
-			var tokenObject = JSON.parse(getCookie('token'));
-			$('#userName').text(tokenObject.account);
-			$("button[type=submit]").click(function() {
+			function refreshtoken() {
+				var tokenObject = JSON.parse(getCookie('token'));
+				$.ajax({
+					type: 'POST',
+					dataType:"json",
+					data: JSON.stringify(tokenObject.token),
+					url: '@Url.Action("Refresh", "Home")',
+					headers:{
+						'Authorization' : 'Bearer ' + tokenObject.refreshToken,
+						'Content-Type':'application/json'
+					},
+					success: function(data) {
+						if (data && data.retCode == 0) {
+							setCookie('token', JSON.stringify({
+									"account": tokenObject.account,
+									"token": data.data.token,
+									"refreshToken": data.data.refreshToken
+								}), { expires: 7 });
+							submit(true);
+						}
+					}
+				});
+			}
+			function submit(isPassRefresh) {
 				if ($('#password').val() == '' || $('#newpassword').val() == '') {
 					setDialogText('Vui lòng xác nhận mật khẩu!');
 					myModal.show();
@@ -53,6 +74,7 @@
 					return;
 				}
 				$('#dialog').show();
+				var tokenObject = JSON.parse(getCookie('token'));
 				var retData;
 				var password = $('#password').val();
 				var encrypted = encryptString(password, key, iv);
@@ -74,10 +96,12 @@
 						retData = data;
 					},
 					error: function(data) {
-						console.log(data);
+						if (data.status == 401) {
+							if (isPassRefresh) return;
+							refreshtoken();
+						}
 					},
 					complete: function(data) {
-						console.log(data);
 						$('#dialog').hide();
 						if (retData && retData.retCode == 0) {
 							var url = '@Url.Action("Index", "Home")';
@@ -90,6 +114,9 @@
 						}
 					}
 				});
+			}
+			$("button[type=submit]").click(function() {
+				submit();
 			});
 		});
 	</script>

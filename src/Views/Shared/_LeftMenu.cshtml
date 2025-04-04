@@ -495,16 +495,16 @@
 			success: function(data) {
 				retData = data;
 			},
-			error: function(data) {
-				console.log(data);
-			},
+			// error: function(data) {
+			// 	console.log(data);
+			// },
 			complete: function(data) {
-				console.log(data);
 				$('#dialog').hide();
 				if (retData && retData.retCode == 0) {
 					setCookie('token', JSON.stringify({
 							"account": $('#login_input').val(),
-							"token": retData.data.token
+							"token": retData.data.token,
+							"refreshToken": retData.data.refreshToken
 						}), { expires: 7 });
 					reloadMainPage();
 					return;

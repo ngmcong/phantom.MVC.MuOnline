@@ -85,11 +85,10 @@
 					success: function(data) {
 						retData = data;
 					},
-					error: function(data) {
-						console.log(data);
-					},
+					// error: function(data) {
+					// 	console.log(data);
+					// },
 					complete: function(data) {
-						console.log(data);
 						$('#dialog').hide();
 						if (retData && retData.retCode == 0) {
 							var url = '@Url.Action("Index", "Home")';

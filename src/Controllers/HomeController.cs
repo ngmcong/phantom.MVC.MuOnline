@@ -161,7 +161,7 @@ namespace phantom.MVC.MuOnline.Controllers
             return View();
         }
 
-        [HttpGet, Authorize(Policy = "Refresh")]
+        [HttpPost, Authorize(Policy = "Refresh")]
         public async Task<ActionResult<APIModel>> Refresh([FromBody] string originalToken)
         {
             var refreshAccount = this.User.Claims.First(i => i.Type == ClaimTypes.NameIdentifier).Value;
