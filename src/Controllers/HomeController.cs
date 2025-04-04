@@ -104,7 +104,7 @@ namespace phantom.MVC.MuOnline.Controllers
             return finalString;
         }
 
-        private string CreateLoginToken(string accountId)
+        private string CreateLoginToken(string accountId, string? originalToken = null)
         {
             //Authentication successful so generate jwt token
             var tokenHandler = new JwtSecurityTokenHandler();
@@ -114,8 +114,10 @@ namespace phantom.MVC.MuOnline.Controllers
                 {
                     new Claim(ClaimTypes.NameIdentifier, $"{accountId}"),
                     new Claim(ClaimTypes.Name, $"{accountId}"),
+                    string.IsNullOrEmpty(originalToken) ?  new Claim("scope", "read:users write:users") : new Claim("scope", "read:refresh"),
+                    new Claim("OriginalToken", $"{originalToken}"),
                 }),
-                Expires = DateTime.UtcNow.AddMinutes(Globals.TokenTimeout),
+                Expires = string.IsNullOrEmpty(originalToken) ? DateTime.UtcNow.AddMinutes(Globals.TokenTimeout) : null,
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(Globals.JwtSecretKey), SecurityAlgorithms.HmacSha256Signature)
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);
@@ -138,8 +140,12 @@ namespace phantom.MVC.MuOnline.Controllers
                     var memb__pwd = $"{await dbConnection.ExecuteScalarAsync($"SET ARITHABORT ON; SELECT TOP 1 CAST('' AS XML).value('xs:base64Binary(sql:column(\"memb__pwd\"))', 'varchar(max)') AS memb__pwd FROM [MEMB_INFO] WHERE memb___id='{model.Name}'")}";
                     if (Base64Encode(model.Password!, model.Name!) == memb__pwd)
                     {
-                        var stringToken = CreateLoginToken(model.Name!);
-                        return new APIModel(new { Token = stringToken });
+                        var token = CreateLoginToken(accountId: model.Name!);
+                        return new APIModel(new
+                        {
+                            Token = token,
+                            RefreshToken = CreateLoginToken(accountId: model.Name!, originalToken: token)
+                        });
                     }
                 }
                 return new APIModel("Sai thông tin tài khoản.");
@@ -155,7 +161,29 @@ namespace phantom.MVC.MuOnline.Controllers
             return View();
         }
 
-        [HttpPost, Authorize]
+        [HttpGet, Authorize(Policy = "Refresh")]
+        public async Task<ActionResult<APIModel>> Refresh([FromBody] string originalToken)
+        {
+            var refreshAccount = this.User.Claims.First(i => i.Type == ClaimTypes.NameIdentifier).Value;
+            var refreshOriginalToken = this.User.Claims.First(i => i.Type == "OriginalToken").Value;
+
+            var securityToken = (JwtSecurityToken)(new JwtSecurityTokenHandler()).ReadToken(originalToken);
+            var originalAccount = securityToken.Claims.FirstOrDefault(c => c.Type == "nameid")?.Value;
+
+            if (originalAccount != refreshAccount || refreshOriginalToken != originalToken)
+            {
+                return Unauthorized();
+            }
+            var token = CreateLoginToken(accountId: refreshAccount);
+            await Task.CompletedTask;
+            return new APIModel(new
+            {
+                Token = token,
+                RefreshToken = CreateLoginToken(accountId: refreshAccount, originalToken: token)
+            });
+        }
+
+        [HttpPost, Authorize(Policy = "User")]
         public async Task<APIModel> ChangePass([FromBody] RegisterModel model)
         {
             try
